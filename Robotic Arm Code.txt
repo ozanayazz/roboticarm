@@ -1,0 +1,84 @@
+//Ozan Ayaz
+// Electrical and Electronics Engineer
+#include <Servo.h>
+Servo alt,ileri,yukari,grip ; //servolarý tanýtýyoruz.
+int xPin1 = A0; // A0-A5 analog pinlerinden herhangi birine baðlanabilir.
+int yPin1 = A1; // A0-A5 analog pinlerinden herhangi birine baðlanabilir.
+int xPin2 = A3;
+int yPin2 = A4;
+int buton1 = 2; // Joystick buton pini arduino baðlantýsý (Joystick SW çýkýþý)
+int buton2 = 3;
+int xPozisyonu1,yPozisyonu1,xPozisyonu2,yPozisyonu2,butonD1,butonD2;
+void setup() {
+Serial.begin(9600);
+pinMode(xPin1, INPUT);
+pinMode(yPin1, INPUT);
+pinMode(buton1, INPUT_PULLUP);
+pinMode(xPin2, INPUT);
+pinMode(yPin2, INPUT);
+pinMode(buton2, INPUT_PULLUP);
+alt.attach(11);   // Servolarýmýzý Arduino'nun pwm(~) çýkýþlarýna baðlamamýz gerekir bu pinler 3,5,6,9,10,11dir.
+ileri.attach(10);
+yukari.attach(9);
+grip.attach(6);
+}
+void loop() {
+xPozisyonu1 = analogRead(xPin1);
+yPozisyonu1 = analogRead(yPin1);
+butonD1 = digitalRead(buton1);
+xPozisyonu2 = analogRead(xPin2);
+yPozisyonu2 = analogRead(yPin2);
+butonD2 = digitalRead(buton2);
+//Serial.print("X Pozisyonu: ");
+//Serial.print(xPozisyonu1);
+//Serial.print(" | Y Pozisyonu: ");
+//Serial.print(yPozisyonu1);
+//Serial.print(" | Buton Durum: ");
+//Serial.println(butonD1);
+//Serial.println("2.joystik");
+//Serial.print("X Pozisyonu: ");
+//Serial.print(xPozisyonu2);
+//Serial.print(" | Y Pozisyonu: ");
+//Serial.print(yPozisyonu2);
+//Serial.print(" | Buton Durum: ");
+//Serial.println(butonD2);
+//delay(100);
+   if (xPozisyonu1 >= 0 && xPozisyonu1 <= 1023) // SAG/SOL
+{ 
+ 
+ int servo1 = xPozisyonu1; // gelenVeriyi bir deðiþkene tanýmlayýp servo açýsý olarak yazdýrýyoruz.
+ servo1 = map(servo1, 0, 1023, 0, 180);
+ alt.write(servo1); // servoya açýsal deðer olarak gelen veri yazdýrýlýyor.
+ delay(10); // servonun hareketini belirli ölçekde yavaþlatmak için delay
+//    Serial.println("alt gelen veri"); // deneme amaçlý sistemimiz sorunsuz çalýþýyormu diye kontrol ediyoruz.
+//    Serial.println(servo1); // yolladðýmýz deðerin doðruluðuna bakýyoruz.
+}
+  else   if (yPozisyonu1 >= 0 && yPozisyonu1 <= 1023) // asagý/yukarý
+{ 
+ 
+ int servo2 = yPozisyonu1; // gelenVeriyi bir deðiþkene tanýmlayýp servo açýsý olarak yazdýrýyoruz.
+ servo2 = map(servo2, 0, 1023, 0, 180);
+ ileri.write(servo2); // servoya açýsal deðer olarak gelen veri yazdýrýlýyor.
+ delay(10); // servonun hareketini belirli ölçekde yavaþlatmak için delay
+//    Serial.println("ileri gelen veri"); // deneme amaçlý sistemimiz sorunsuz çalýþýyormu diye kontrol ediyoruz.
+//    Serial.println(servo2); // yolladðýmýz deðerin doðruluðuna bakýyoruz.
+}
+ else if (xPozisyonu2 >= 0 && xPozisyonu2 <= 1023) // ileri/geri
+{
+ int servo3 = xPozisyonu2;
+ servo3 = map(servo3, 0, 1023, 0, 180);
+ yukari.write(servo3);
+ delay(10);
+//  Serial.println("ileri geri gelen veri");
+//  Serial.println(servo3);
+}
+ else if (yPozisyonu2 >= 0 && yPozisyonu2 <= 1023) // Gripper
+{
+ int servo4 = yPozisyonu2;
+ servo4 = map(servo4, 0, 1023, 0, 180);
+ grip.write(servo4);
+ delay(10);
+//  Serial.println("gripper gelen veri");
+//  Serial.println(servo4);
+}
+}
